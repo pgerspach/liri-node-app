@@ -41,12 +41,17 @@ function concertThis(artistName) {
     var i = 0;
 
     for (let event of response.data) {
-      console.log(`Venue name: ${event.venue.name}`);
-      fs.appendFile(
-        "log.txt",
-        `Venue name: ${event.venue.name}` + `\n`,
-        err => {}
-      );
+      try {
+        console.log(`Venue name: ${event.venue.name}`);
+        fs.appendFile(
+          "log.txt",
+          `Venue name: ${event.venue.name}` + `\n`,
+          err => {}
+        );
+      } catch {
+        console.log("Cannot find upcoming concerts");
+        break;
+      }
 
       console.log(`Venue location: ${event.venue.city}`);
       fs.appendFile(
@@ -80,19 +85,23 @@ function movieThis(movieName) {
     console.log(`Year: ${response.data.Year}`);
     fs.appendFile("log.txt", `Year: ${response.data.Year}` + `\n`, err => {});
 
-    console.log(`Rating: ${response.data.Rated}`);
+    console.log(`MPAA Rating: ${response.data.Rated}`);
     fs.appendFile(
       "log.txt",
       `Rating: ${response.data.Rated}` + `\n`,
       err => {}
     );
 
-    console.log(`Rotten Tomatoes Rating: ${response.data.Ratings[1].Value}`);
-    fs.appendFile(
-      "log.txt",
-      `Rotten Tomatoes Rating: ${response.data.Ratings[1].Value}` + `\n`,
-      err => {}
-    );
+    try {
+      console.log(`Rotten Tomatoes Rating: ${response.data.Ratings[1].Value}`);
+      fs.appendFile(
+        "log.txt",
+        `Rotten Tomatoes Rating: ${response.data.Ratings[1].Value}` + `\n`,
+        err => {}
+      );
+    } catch (error) {
+      console.log("Cannot find Rotten Tomatoes rating");
+    }
 
     console.log(`Country: ${response.data.Country}`);
     fs.appendFile(
@@ -183,7 +192,6 @@ function parseInput(input) {
     for (let word of input.slice(1)) {
       returnInput = returnInput + "+" + word;
     }
-    console.log("RETIN: " + returnInput);
     return returnInput.trim();
   }
 }
